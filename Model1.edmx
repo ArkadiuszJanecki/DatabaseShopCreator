@@ -1,0 +1,648 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="masterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID_Category" />
+          </Key>
+          <Property Name="ID_Category" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Parent" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="IsActivated" Type="bit" />
+        </EntityType>
+        <EntityType Name="Opinion">
+          <Key>
+            <PropertyRef Name="ID_Opinion" />
+          </Key>
+          <Property Name="ID_Opinion" Type="int" Nullable="false" />
+          <Property Name="Rating" Type="tinyint" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="50" />
+          <Property Name="ID_Person" Type="int" Nullable="false" />
+          <Property Name="ID_Product" Type="int" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="ID_Person" />
+          </Key>
+          <Property Name="ID_Person" Type="int" Nullable="false" />
+          <Property Name="Role" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Surname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone_Number" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Age" Type="int" Nullable="false" />
+          <Property Name="Adress_1" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Adress_2" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'master.dbo.Price' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Price">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+            <PropertyRef Name="Price" />
+          </Key>
+          <Property Name="ID_Product" Type="int" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Shipping_Price" Type="float" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+          </Key>
+          <Property Name="ID_Product" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="Weight" Type="float" />
+          <Property Name="Height" Type="float" />
+          <Property Name="Width" Type="float" />
+          <Property Name="Depth" Type="float" />
+          <Property Name="Producent_ID" Type="int" Nullable="false" />
+          <Property Name="Producent_Name" Type="varchar" MaxLength="50" />
+          <Property Name="Warranty" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Image" Type="image" />
+          <Property Name="ID_Opinion" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'master.dbo.ProductWithCategory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ProductWithCategory">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+            <PropertyRef Name="ID_Category" />
+          </Key>
+          <Property Name="ID_Product" Type="int" Nullable="false" />
+          <Property Name="ID_Category" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'master.dbo.ProductWithOpinion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ProductWithOpinion">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+            <PropertyRef Name="ID_Opinion" />
+          </Key>
+          <Property Name="ID_Product" Type="int" Nullable="false" />
+          <Property Name="ID_Opinion" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'master.dbo.Promotion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Promotion">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+          </Key>
+          <Property Name="ID_Product" Type="int" Nullable="false" />
+          <Property Name="Promotion_Price" Type="float" />
+          <Property Name="Price_Percent" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'master.dbo.StockStatus' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="StockStatus">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+            <PropertyRef Name="Stock_Status" />
+          </Key>
+          <Property Name="ID_Product" Type="int" Nullable="false" />
+          <Property Name="Stock_Status" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Opinion_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Opinion" Type="Self.Opinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID_Person" />
+            </Principal>
+            <Dependent Role="Opinion">
+              <PropertyRef Name="ID_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Opinion_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Opinion" Type="Self.Opinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="Opinion">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Price_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Price" Type="Self.Price" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="Price">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Opinion">
+          <End Role="Opinion" Type="Self.Opinion" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Opinion">
+              <PropertyRef Name="ID_Opinion" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ID_Opinion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWithCategory_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="ProductWithCategory" Type="Self.ProductWithCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="ID_Category" />
+            </Principal>
+            <Dependent Role="ProductWithCategory">
+              <PropertyRef Name="ID_Category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWithCategory_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductWithCategory" Type="Self.ProductWithCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="ProductWithCategory">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWithOpinion_Opinion">
+          <End Role="Opinion" Type="Self.Opinion" Multiplicity="1" />
+          <End Role="ProductWithOpinion" Type="Self.ProductWithOpinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Opinion">
+              <PropertyRef Name="ID_Opinion" />
+            </Principal>
+            <Dependent Role="ProductWithOpinion">
+              <PropertyRef Name="ID_Opinion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWithOpinion_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductWithOpinion" Type="Self.ProductWithOpinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="ProductWithOpinion">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Promotion_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Promotion" Type="Self.Promotion" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="Promotion">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StockStatus_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="StockStatus" Type="Self.StockStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="StockStatus">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="masterModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Opinion" EntityType="Self.Opinion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Price" EntityType="Self.Price" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Price].[ID_Product] AS [ID_Product], 
+    [Price].[Price] AS [Price], 
+    [Price].[Shipping_Price] AS [Shipping_Price]
+    FROM [dbo].[Price] AS [Price]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ProductWithCategory" EntityType="Self.ProductWithCategory" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ProductWithCategory].[ID_Product] AS [ID_Product], 
+    [ProductWithCategory].[ID_Category] AS [ID_Category]
+    FROM [dbo].[ProductWithCategory] AS [ProductWithCategory]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ProductWithOpinion" EntityType="Self.ProductWithOpinion" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ProductWithOpinion].[ID_Product] AS [ID_Product], 
+    [ProductWithOpinion].[ID_Opinion] AS [ID_Opinion]
+    FROM [dbo].[ProductWithOpinion] AS [ProductWithOpinion]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Promotion" EntityType="Self.Promotion" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Promotion].[ID_Product] AS [ID_Product], 
+    [Promotion].[Promotion_Price] AS [Promotion_Price], 
+    [Promotion].[Price_Percent] AS [Price_Percent]
+    FROM [dbo].[Promotion] AS [Promotion]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="StockStatus" EntityType="Self.StockStatus" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [StockStatus].[ID_Product] AS [ID_Product], 
+    [StockStatus].[Stock_Status] AS [Stock_Status]
+    FROM [dbo].[StockStatus] AS [StockStatus]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Opinion_Person" Association="Self.FK_Opinion_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Opinion" EntitySet="Opinion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Opinion_Product" Association="Self.FK_Opinion_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Opinion" EntitySet="Opinion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Price_Product" Association="Self.FK_Price_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Price" EntitySet="Price" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Opinion" Association="Self.FK_Product_Opinion">
+            <End Role="Opinion" EntitySet="Opinion" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWithCategory_Category" Association="Self.FK_ProductWithCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="ProductWithCategory" EntitySet="ProductWithCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWithCategory_Product" Association="Self.FK_ProductWithCategory_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductWithCategory" EntitySet="ProductWithCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWithOpinion_Opinion" Association="Self.FK_ProductWithOpinion_Opinion">
+            <End Role="Opinion" EntitySet="Opinion" />
+            <End Role="ProductWithOpinion" EntitySet="ProductWithOpinion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWithOpinion_Product" Association="Self.FK_ProductWithOpinion_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductWithOpinion" EntitySet="ProductWithOpinion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Promotion_Product" Association="Self.FK_Promotion_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Promotion" EntitySet="Promotion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StockStatus_Product" Association="Self.FK_StockStatus_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="StockStatus" EntitySet="StockStatus" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="masterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID_Category" />
+          </Key>
+          <Property Name="ID_Category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Parent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActivated" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="Self.ProductWithCategory" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Opinion">
+          <Key>
+            <PropertyRef Name="ID_Opinion" />
+          </Key>
+          <Property Name="ID_Opinion" Type="Int32" Nullable="false" />
+          <Property Name="Rating" Type="Byte" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Person" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Self.FK_Opinion_Person" FromRole="Opinion" ToRole="Person" />
+          <NavigationProperty Name="Product" Relationship="Self.ProductWithOpinion" FromRole="Opinion" ToRole="Product" />
+          <Property Name="ID_Product" Type="Int32" />
+          <NavigationProperty Name="Product1" Relationship="masterModel.FK_Opinion_Product" FromRole="Opinion" ToRole="Product" />
+          <NavigationProperty Name="Product11" Relationship="masterModel.FK_Product_Opinion" FromRole="Opinion" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="ID_Person" />
+          </Key>
+          <Property Name="ID_Person" Type="Int32" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Phone_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Age" Type="Int32" Nullable="false" />
+          <Property Name="Adress_1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Adress_2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Opinion" Relationship="Self.FK_Opinion_Person" FromRole="Person" ToRole="Opinion" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+          </Key>
+          <Property Name="ID_Product" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Weight" Type="Double" />
+          <Property Name="Height" Type="Double" />
+          <Property Name="Width" Type="Double" />
+          <Property Name="Depth" Type="Double" />
+          <Property Name="Producent_ID" Type="Int32" Nullable="false" />
+          <Property Name="Producent_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Warranty" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Price" Relationship="Self.FK_Price_Product" FromRole="Product" ToRole="Price" />
+          <NavigationProperty Name="Promotion" Relationship="Self.FK_Promotion_Product" FromRole="Product" ToRole="Promotion" />
+          <NavigationProperty Name="StockStatus" Relationship="Self.FK_StockStatus_Product" FromRole="Product" ToRole="StockStatus" />
+          <NavigationProperty Name="Category" Relationship="Self.ProductWithCategory" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="Opinion" Relationship="masterModel.ProductWithOpinion" FromRole="Product" ToRole="Opinion" />
+          <Property Name="ID_Opinion" Type="Int32" />
+          <NavigationProperty Name="Opinion1" Relationship="masterModel.FK_Opinion_Product" FromRole="Product" ToRole="Opinion" />
+          <NavigationProperty Name="Opinion11" Relationship="masterModel.FK_Product_Opinion" FromRole="Product" ToRole="Opinion" />
+        </EntityType>
+        <EntityType Name="Price">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+            <PropertyRef Name="Price1" />
+          </Key>
+          <Property Name="ID_Product" Type="Int32" Nullable="false" />
+          <Property Name="Price1" Type="Double" Nullable="false" />
+          <Property Name="Shipping_Price" Type="Double" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Price_Product" FromRole="Price" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Promotion">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+          </Key>
+          <Property Name="ID_Product" Type="Int32" Nullable="false" />
+          <Property Name="Promotion_Price" Type="Double" />
+          <Property Name="Price_Percent" Type="Int32" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Promotion_Product" FromRole="Promotion" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="StockStatus">
+          <Key>
+            <PropertyRef Name="ID_Product" />
+            <PropertyRef Name="Stock_Status" />
+          </Key>
+          <Property Name="ID_Product" Type="Int32" Nullable="false" />
+          <Property Name="Stock_Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_StockStatus_Product" FromRole="StockStatus" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_Opinion_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Opinion" Type="Self.Opinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID_Person" />
+            </Principal>
+            <Dependent Role="Opinion">
+              <PropertyRef Name="ID_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Price_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Price" Type="Self.Price" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="Price">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Promotion_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Promotion" Type="Self.Promotion" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="Promotion">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StockStatus_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="StockStatus" Type="Self.StockStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="StockStatus">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductWithCategory">
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+        </Association>
+        <Association Name="ProductWithOpinion">
+          <End Role="Opinion" Type="Self.Opinion" Multiplicity="*" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="masterEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Category" EntityType="Self.Category" />
+          <EntitySet Name="Opinion" EntityType="Self.Opinion" />
+          <EntitySet Name="Person" EntityType="Self.Person" />
+          <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="Price" EntityType="Self.Price" />
+          <EntitySet Name="Promotion" EntityType="Self.Promotion" />
+          <EntitySet Name="StockStatus" EntityType="Self.StockStatus" />
+          <AssociationSet Name="FK_Opinion_Person" Association="Self.FK_Opinion_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Opinion" EntitySet="Opinion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Price_Product" Association="Self.FK_Price_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Price" EntitySet="Price" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Promotion_Product" Association="Self.FK_Promotion_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Promotion" EntitySet="Promotion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StockStatus_Product" Association="Self.FK_StockStatus_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="StockStatus" EntitySet="StockStatus" />
+          </AssociationSet>
+          <AssociationSet Name="ProductWithCategory" Association="Self.ProductWithCategory">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="ProductWithOpinion" Association="Self.ProductWithOpinion">
+            <End Role="Opinion" EntitySet="Opinion" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Opinion_Product" Association="masterModel.FK_Opinion_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Opinion" EntitySet="Opinion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Opinion" Association="masterModel.FK_Product_Opinion">
+            <End Role="Opinion" EntitySet="Opinion" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          </EntityContainer>
+        <Association Name="FK_Opinion_Product">
+          <End Type="masterModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="masterModel.Opinion" Role="Opinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID_Product" />
+            </Principal>
+            <Dependent Role="Opinion">
+              <PropertyRef Name="ID_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Opinion">
+          <End Type="masterModel.Opinion" Role="Opinion" Multiplicity="0..1" />
+          <End Type="masterModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Opinion">
+              <PropertyRef Name="ID_Opinion" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ID_Opinion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="masterModelStoreContainer" CdmEntityContainer="masterEntities">
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="masterModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="ID_Category" ColumnName="ID_Category" />
+                <ScalarProperty Name="Parent" ColumnName="Parent" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IsActivated" ColumnName="IsActivated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Opinion">
+            <EntityTypeMapping TypeName="masterModel.Opinion">
+              <MappingFragment StoreEntitySet="Opinion">
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="ID_Opinion" ColumnName="ID_Opinion" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ID_Person" ColumnName="ID_Person" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Person">
+            <EntityTypeMapping TypeName="masterModel.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="ID_Person" ColumnName="ID_Person" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Adress_1" ColumnName="Adress_1" />
+                <ScalarProperty Name="Adress_2" ColumnName="Adress_2" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="masterModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ID_Opinion" ColumnName="ID_Opinion" />
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Height" ColumnName="Height" />
+                <ScalarProperty Name="Width" ColumnName="Width" />
+                <ScalarProperty Name="Depth" ColumnName="Depth" />
+                <ScalarProperty Name="Producent_ID" ColumnName="Producent_ID" />
+                <ScalarProperty Name="Producent_Name" ColumnName="Producent_Name" />
+                <ScalarProperty Name="Warranty" ColumnName="Warranty" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Price">
+            <EntityTypeMapping TypeName="masterModel.Price">
+              <MappingFragment StoreEntitySet="Price">
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="Price1" ColumnName="Price" />
+                <ScalarProperty Name="Shipping_Price" ColumnName="Shipping_Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Promotion">
+            <EntityTypeMapping TypeName="masterModel.Promotion">
+              <MappingFragment StoreEntitySet="Promotion">
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="Promotion_Price" ColumnName="Promotion_Price" />
+                <ScalarProperty Name="Price_Percent" ColumnName="Price_Percent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockStatus">
+            <EntityTypeMapping TypeName="masterModel.StockStatus">
+              <MappingFragment StoreEntitySet="StockStatus">
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="Stock_Status" ColumnName="Stock_Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ProductWithCategory" TypeName="masterModel.ProductWithCategory" StoreEntitySet="ProductWithCategory">
+            <EndProperty Name="Category">
+              <ScalarProperty Name="ID_Category" ColumnName="ID_Category" />
+            </EndProperty>
+            <EndProperty Name="Product">
+              <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ProductWithOpinion" TypeName="masterModel.ProductWithOpinion" StoreEntitySet="ProductWithOpinion">
+            <EndProperty Name="Opinion">
+              <ScalarProperty Name="ID_Opinion" ColumnName="ID_Opinion" />
+            </EndProperty>
+            <EndProperty Name="Product">
+              <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
